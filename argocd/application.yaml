@@ -1,10 +1,10 @@
-apiVersion: argoproj.io/v1alpha
+apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: argo-sample-application
   namespace: argocd
 spec:
-  projects: default
+  project: default
   source:
     repoURL: https://github.com/r0B-O/platform-dev.git
     targetRevision: feature/init
