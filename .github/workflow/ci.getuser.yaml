@@ -22,7 +22,7 @@ env:
 
 jobs:
   getauthor:
-    runs-on: acp-dind-runner
+    runs-on: self-hosted
     # needs:
     #   - gitversion
     steps:
