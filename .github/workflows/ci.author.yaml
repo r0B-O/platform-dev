@@ -33,10 +33,10 @@ jobs:
           fetch-depth: 0
 
       - name: Install gh cli
-        uses: acp/install-binary-action@v2.0.1
+        uses: giantswarm/install-binary-action@v2.0.0
         with:
           binary: gh
-          version: ${{ env.GITHUB_CLI_VERSION }}
+          version: 2.47.0
           download_url: https://github.com/cli/cli/releases/download/v${version}/gh_${version}_linux_amd64.tar.gz
           tarball_binary_path: "*/bin/${binary}"
           smoke_test: ${binary} --version
@@ -49,8 +49,8 @@ jobs:
         run: |
           gh pr checkout ${{ github.event.number }} -f -b pull/${{ github.event.number }}/merge
         env:
-          GH_HOST: github.developer.allianz.io
-          GITHUB_ENTERPRISE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_HOST: github.com
+          GH_TOKEN: ${{ secrets.PA_TOKEN }}
 
       - name: Insert author name
         run: |
@@ -74,5 +74,5 @@ jobs:
             gh pr view --json body -q ".body" | jq '. += "\n\nChanged files: '${changed_files}'"' | gh pr comment --body "$(jq -r .)"
           done
         env:
-          GH_HOST: github.developer.allianz.io
-          GITHUB_ENTERPRISE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_HOST: github.com
+          GH_TOKEN: ${{ secrets.PA_TOKEN }}
