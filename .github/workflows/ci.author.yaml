@@ -2,15 +2,15 @@ name: User Discovery CI
 
 on: 
   workflow_dispatch:
-  push:
-    branches:
-      - main
-      - feature/init
-  # pull_request_target:
-  #   types:
-  #     - opened
+  # push:
   #   branches:
-  #     - 'main'
+  #     - main
+  #     - feature/init
+  pull_request_target:
+    types:
+      - opened
+    # branches:
+    #   - 'main'
 
 env:
   # renovate: datasource=github-releases depName=GitTools/GitVersion registryUrl=https://github.com extractVersion=v
@@ -47,7 +47,8 @@ jobs:
       - name: Check out code
         # if: ${{ contains(fromJSON('["pull_request_target", "pull_request"]'),github.event_name) }}
         run: |
-          gh pr checkout ${{ github.event.number }} -f -b pull/${{ github.event.number }}/merge
+          # gh pr checkout ${{ github.event.number }} -f -b pull/${{ github.event.number }}/merge
+          # gh pr checkout ${{ github.event.number }} -f -b pull/${{ github.event.number }}/merge
         env:
           GH_HOST: github.com
           GH_TOKEN: ${{ secrets.PA_TOKEN }}
@@ -76,3 +77,4 @@ jobs:
         env:
           GH_HOST: github.com
           GH_TOKEN: ${{ secrets.PA_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
