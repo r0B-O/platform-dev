@@ -55,6 +55,8 @@ jobs:
 
       - name: Insert author name
         run: |
+          gh auth login --token =$GH_TOKEN
+          
           # Get the list of changed files in the PR
           changed_files=$(gh pr view --json files -q ".files[].path" | jq -r '.[]' | paste -sd "," -)
 
