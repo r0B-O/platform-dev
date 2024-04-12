@@ -1,0 +1,78 @@
+name: User Discovery CI
+
+on: 
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - feature/init
+  # pull_request_target:
+  #   types:
+  #     - opened
+  #   branches:
+  #     - 'main'
+
+env:
+  # renovate: datasource=github-releases depName=GitTools/GitVersion registryUrl=https://github.com extractVersion=v
+  GITVERSION_VERSION: '5.12.0'
+  # renovate: datasource=github-releases depName=cli/cli registryUrl=https://github.com extractVersion=v
+  GITHUB_CLI_VERSION: '2.28.0'
+  CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY_HOST }}
+  CONTAINER_REPOSITORY: ${{ github.repository }}
+
+jobs:
+  getauthor:
+    runs-on: acp-dind-runner
+    # needs:
+    #   - gitversion
+    steps:
+
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install gh cli
+        uses: acp/install-binary-action@v2.0.1
+        with:
+          binary: gh
+          version: ${{ env.GITHUB_CLI_VERSION }}
+          download_url: https://github.com/cli/cli/releases/download/v${version}/gh_${version}_linux_amd64.tar.gz
+          tarball_binary_path: "*/bin/${binary}"
+          smoke_test: ${binary} --version
+
+      # This is needed to check out pull requests from a forked repository.
+      # Branch name is following pattern: pull/${{ github.event.number }}/merge to simulate actions/checkout@v4 behaviour
+      # in normal pull requests.
+      - name: Check out code
+        # if: ${{ contains(fromJSON('["pull_request_target", "pull_request"]'),github.event_name) }}
+        run: |
+          gh pr checkout ${{ github.event.number }} -f -b pull/${{ github.event.number }}/merge
+        env:
+          GH_HOST: github.developer.allianz.io
+          GITHUB_ENTERPRISE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Insert author name
+        run: |
+          # Get the list of changed files in the PR
+          changed_files=$(gh pr view --json files -q ".files[].path" | jq -r '.[]' | paste -sd "," -)
+
+          # Get the author name of the most recent commit
+          author=$(git log -1 --pretty=%ae)
+
+          # Loop over the changed files and insert a comment at the top of each file
+          for file in ${changed_files}; do
+            git checkout ${GITHUB_REF} -- ${file}
+            git stash
+            git checkout -
+            git stash drop
+            sed -i "1s/^/# Author: ${author}\n/" ${file}
+            git add ${file}
+            git commit -m "Add author comment"
+            git push -f
+            # Add a comment to the pull request with the list of changed files
+            gh pr view --json body -q ".body" | jq '. += "\n\nChanged files: '${changed_files}'"' | gh pr comment --body "$(jq -r .)"
+          done
+        env:
+          GH_HOST: github.developer.allianz.io
+          GITHUB_ENTERPRISE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
