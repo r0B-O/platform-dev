@@ -55,16 +55,11 @@ jobs:
 
       - name: Insert author name
         run: |
-          gh auth login --token =$GH_TOKEN
-          
-          # Get the list of changed files in the PR
+          gh auth login --token =$GH_TOKEN --verbose
           changed_files=$(gh pr view --json files -q ".files[].path" | jq -r '.[]' | paste -sd "," -)
           gh auth login --with-token $GH_TOKEN
-
-          # Get the author name of the most recent commit
           author=$(git log -1 --pretty=%ae)
 
-          # Loop over the changed files and insert a comment at the top of each file
           for file in ${changed_files}; do
             git checkout ${GITHUB_REF} -- ${file}
             git stash
@@ -74,7 +69,6 @@ jobs:
             git add ${file}
             git commit -m "Add author comment"
             git push -f
-            # Add a comment to the pull request with the list of changed files
             gh pr view --json body -q ".body" | jq '. += "\n\nChanged files: '${changed_files}'"' | gh pr comment --body "$(jq -r .)"
           done
         env:
