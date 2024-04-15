@@ -11,6 +11,9 @@ on:
       - opened
     branches:
       - '**'
+  pull_request:
+    branches:
+      - '**'
 
 env:
   # renovate: datasource=github-releases depName=GitTools/GitVersion registryUrl=https://github.com extractVersion=v
