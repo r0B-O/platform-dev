@@ -48,7 +48,7 @@ jobs:
         # if: ${{ contains(fromJSON('["pull_request_target", "pull_request"]'),github.event_name) }}
         run: |
           gh auth login --with-token $GH_TOKEN && \
-          gh pr checkout ${{ github.event.number }} -f -b pull/${{ github.event.number }}/merge
+          gh pr checkout ${{ github.event.number }} -f -b pull/${{ github.event.number }}/merge && \
           gh pr checkout ${{ github.event.number }} -f -b pull/${{ github.event.number }}/merge
         env:
           GH_HOST: github.com
@@ -57,7 +57,7 @@ jobs:
       - name: Insert author name
         run: |
           gh auth login --with-token $GH_TOKEN && \
-            gh pr view $PR_NUMBER --json files -q
+            gh pr view $PR_NUMBER --json
             changed_files=$(gh pr view $PR_NUMBER --json files -q ".files[].path" | jq -r '.[]' | paste -sd "," -) && \
             author=$(git log -1 --pretty=%ae) && \
 
