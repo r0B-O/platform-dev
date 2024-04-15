@@ -60,6 +60,8 @@ jobs:
 
       - name: Insert author name
         run: |
+          echo "PR Num PR Number direct --> $PR_NUMBER"
+          echo "PR Number direct --> ${{ github.event.pull_request.number }}"
           gh auth login --with-token $GH_TOKEN && \
             gh pr view $PR_NUMBER --json
             changed_files=$(gh pr view $PR_NUMBER --json files -q ".files[].path" | jq -r '.[]' | paste -sd "," -) && \
