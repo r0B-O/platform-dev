@@ -6,7 +6,7 @@ metadata:
 spec:
   applicationServer:
     host: "my.host.com"  # string (required)
-    port: 8082  # integer (required)
+    port: 8083  # integer (required)
     basePath: "/"  # string (optional)
     exportMetrics: false  # boolean (optional)
   database:
