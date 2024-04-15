@@ -66,18 +66,14 @@ jobs:
           
           author=$(git log -1 --pretty=%ae)
           echo "Author: $author"
+          echo "$changed_files"
 
           for file in ${changed_files}; do
-            git checkout ${GITHUB_REF} -- ${file}
-            git stash
-            git checkout -
-            git stash drop
+            echo "Updating: $file"
             sed -i "1s/^# Author:.*/# Author: ${author}\n/" ${file}
             sed -i "1i# Author: ${author}\n" !~ /^# Author:/ ${file}
             git add ${file}
             git commit -m "Add author comment"
-            git push -f
-            gh pr view --json body -q ".body" | jq '. += "\n\nChanged files: '${changed_files}'"' | gh pr comment --body "$(jq -r .)"
           done
         env:
           GH_HOST: github.com
