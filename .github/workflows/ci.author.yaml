@@ -55,7 +55,7 @@ jobs:
 
       - name: Insert author name
         run: |
-          gh auth login --with-token GH_TOKEN --verbose
+          gh auth login --with-token $GH_TOKEN
           changed_files=$(gh pr view --json files -q ".files[].path" | jq -r '.[]' | paste -sd "," -)
           gh auth login --with-token $GH_TOKEN
           author=$(git log -1 --pretty=%ae)
