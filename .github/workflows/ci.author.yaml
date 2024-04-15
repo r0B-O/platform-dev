@@ -2,10 +2,10 @@ name: User Discovery CI
 
 on: 
   workflow_dispatch:
-  push:
-    branches:
-      - '**'
-      # - feature/init
+  # push:
+  #   branches:
+  #     - '**'
+  #     # - feature/init
   pull_request_target:
     types:
       - opened
