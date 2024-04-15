@@ -19,7 +19,10 @@ env:
   GITHUB_CLI_VERSION: '2.28.0'
   CONTAINER_REGISTRY: ${{ secrets.CONTAINER_REGISTRY_HOST }}
   CONTAINER_REPOSITORY: ${{ github.repository }}
-
+  GH_HOST: github.com
+  GH_TOKEN: ${{ secrets.PA_TOKEN }}
+  PR_NUMBER: ${{ github.event.pull_request.number }}
+  
 jobs:
   getauthor:
     runs-on: self-hosted
