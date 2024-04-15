@@ -9,8 +9,8 @@ on:
   pull_request_target:
     types:
       - opened
-    # branches:
-    #   - 'main'
+    branches:
+      - '**'
 
 env:
   # renovate: datasource=github-releases depName=GitTools/GitVersion registryUrl=https://github.com extractVersion=v
