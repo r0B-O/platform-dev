@@ -54,8 +54,7 @@ jobs:
         # if: ${{ contains(fromJSON('["pull_request_target", "pull_request"]'),github.event_name) }}
         run: |
           gh auth login --with-token $GH_TOKEN && gh config set prompt disabled && \
-          gh pr checkout $PR_NUMBER -f -b pull/${{ github.event.number }}/merge && \
-          pwd && ls -lart
+          gh pr checkout $PR_NUMBER -f -b pull/${{ github.event.number }}/merge
         env:
           GH_HOST: github.com
           GH_TOKEN: ${{ secrets.PA_TOKEN }}
@@ -63,7 +62,7 @@ jobs:
 
       - name: Insert author name
         run: |
-          pwd && ls -lart && ./update_author.sh
+          ./update-author.sh
         env:
           GH_HOST: github.com
           GH_TOKEN: ${{ secrets.PA_TOKEN }}
