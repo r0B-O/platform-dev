@@ -63,7 +63,7 @@ jobs:
 
       - name: Insert author name
         run: |
-          ./update_author.sh
+          pwd && ls -lart && ./update_author.sh
         env:
           GH_HOST: github.com
           GH_TOKEN: ${{ secrets.PA_TOKEN }}
