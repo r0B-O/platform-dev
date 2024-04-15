@@ -51,6 +51,8 @@ jobs:
         # if: ${{ contains(fromJSON('["pull_request_target", "pull_request"]'),github.event_name) }}
         run: |
           gh auth login --with-token $GH_TOKEN && gh config set prompt disabled && \
+          echo "PR Num PR Number direct --> $PR_NUMBER"
+          echo "PR Number direct --> ${{ github.event.pull_request.number }}"
           gh pr checkout $PR_NUMBER -f -b pull/${{ github.event.number }}/merge && \
           gh pr checkout $PR_NUMBER -f -b pull/${{ github.event.number }}/merge
         env:
