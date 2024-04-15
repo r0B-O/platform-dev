@@ -62,11 +62,7 @@ jobs:
 
       - name: Insert author name
         run: |
-          echo "PR Num PR Number direct --> $PR_NUMBER"
-          gh pr view $PR_NUMBER --json files
-          $changed_files_test=$(gh pr view $PR_NUMBER --json files -q ".files[].path")
-          echo "Changed Files List: $changed_files_test"
-          changed_files=$(gh pr view $PR_NUMBER --json files -q ".files[].path" | jq -r '.[]' | paste -sd "," -)
+          gh pr view $PR_NUMBER --json files -q ".files[].path" | grep -v '^.github'
           
           author=$(git log -1 --pretty=%ae)
           echo "Author: $author"
@@ -76,7 +72,8 @@ jobs:
             git stash
             git checkout -
             git stash drop
-            sed -i "1s/^/# Author: ${author}\n/" ${file}
+            sed -i "1s/^# Author:.*/# Author: ${author}\n/" ${file}
+            sed -i "1i# Author: ${author}\n" !~ /^# Author:/ ${file}
             git add ${file}
             git commit -m "Add author comment"
             git push -f
