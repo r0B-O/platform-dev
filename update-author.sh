@@ -13,7 +13,7 @@ for file in ${changed_files}; do
         sed -i "1i# Author: ${author}\n" !~ /^# Author:/ ${file}
         git add ${file}
         git commit -m "Add author comment"
-  
+        git push origin HEAD:$(git rev-parse --abbrev-ref HEAD)
     else
         echo "Skipping: '$file' is not a YAML file or does not exist."
     fi
