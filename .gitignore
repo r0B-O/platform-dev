@@ -1,1 +1,4 @@
 test-list.json
+check-file.sh
+changed_files*.json
+test-script.sh
