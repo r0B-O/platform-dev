@@ -11,12 +11,12 @@ for FILE in ${CHANGED_FILES}; do
         echo "Checking: $FILE"
         if IFS= read -r firstline < "$FILE" && [[ $firstline = '# Author:'* ]]
         then
-            echo 'The file %s contains Author\n' "$FILE"
-            echo "Updating author details with commit author - ${AUTHOR}"
-            sed -i "1s/^# Author:.*/# Author: r0B-O/" ${FILE}
+            echo "The file %s contains Author\n $FILE"
+            echo "Add comment with commit author - ${AUTHOR}"
+            sed -i "1s/^# Author:.*/# Author: $AUTHOR/" ${FILE}
         else
-            echo 'No author details found. Inserting, updating author\n'
-            sed -i "1i# Author: r0B-O" !~ /^# Author:/ ${FILE}
+            echo "No author details found. Writing comment to ${FILE}"
+            sed -i "1i# Author: $AUTHOR" !~ /^# Author:/ ${FILE}
         fi
         git add ${FILE}
         git commit -m "chore: insert author name"
