@@ -1,3 +1,4 @@
+# Author: kiran.xlx@gmail.com
 apiVersion: composite.demo.rob-o.dev/v1alpha1
 kind: Demo
 metadata:
@@ -6,7 +7,7 @@ metadata:
 spec:
   applicationServer:
     host: "my.host.com"  # string (required)
-    port: 8081  # integer (required)
+    port: 8092  # integer (required)
     basePath: "/"  # string (optional)
     exportMetrics: false  # boolean (optional)
   database:
