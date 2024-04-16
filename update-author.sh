@@ -1,21 +1,20 @@
 #!/bin/bash
-set -x
-changed_files=$(gh pr view $PR_NUMBER --json files -q ".files[].path" | grep -v '^.github')
-author=$(git log -1 --pretty=%ae)
 
-echo "Author: $author"
-echo "$changed_files"
+CHANGED_FILES=$(gh pr view $PR_NUMBER --json files -q ".files[].path" | grep -v '^.github')
+AUTHOR=$(git log -1 --pretty=%ae)
 
-for file in ${changed_files}; do
+echo "Files updated in this PR: $CHANGED_FILES"
+
+for file in ${CHANGED_FILES}; do
     if [[ -f "$file" && "${file##*.}" =~ ^(yaml|yml)$i ]]; then
+        set -x
         echo "Updating: $file"
-        pwd && ls -lrt
-        sed -i "1s/^# Author:.*/# Author: ${author}/" ${file} &&
-        sed -i "1i# Author: ${author}" !~ /^# Author:/ ${file}
+        sed -i "1s/^# Author:.*/# Author: ${AUTHOR}/" ${file} &&
+        sed -i "1i# Author: ${AUTHOR}" !~ /^# Author:/ ${file}
         git add ${file}
         git commit -m "chore: insert author name"
-        head_branch=$(gh pr view $PR_NUMBER --json headRefName | jq -r '.headRefName')
-        git push origin $head_branch
+        HEAD_REF=$(gh pr view $PR_NUMBER --json headRefName | jq -r '.headRefName')
+        git push origin $HEAD_REF
     else
         echo "Skipping: '$file' is not a YAML file or does not exist."
     fi
