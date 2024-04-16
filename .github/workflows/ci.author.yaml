@@ -28,6 +28,8 @@ env:
 
 jobs:
   getauthor:
+    permissions:
+      contents: write
     runs-on: self-hosted
     # needs:
     #   - gitversion
