@@ -14,7 +14,7 @@ for file in ${changed_files}; do
         sed -i "1i# Author: ${author}\n" !~ /^# Author:/ ${file}
         git add ${file}
         git commit -m "chore: insert author name"
-        head_branch=$(gh pr view $PR_NUMBER --json headRefName | jq '.headRefName')
+        head_branch=$(gh pr view $PR_NUMBER --json headRefName | jq -r '.headRefName')
         git push origin $head_branch
     else
         echo "Skipping: '$file' is not a YAML file or does not exist."

@@ -56,7 +56,7 @@ jobs:
         # if: ${{ contains(fromJSON('["pull_request_target", "pull_request"]'),github.event_name) }}
         run: |
           gh auth login --with-token $GH_TOKEN && gh config set prompt disabled && \
-          head_branch=$(gh pr view $PR_NUMBER --json headRefName | jq '.headRefName') && \
+          head_branch=$(gh pr view $PR_NUMBER --json headRefName | jq -r '.headRefName') && \
           gh pr checkout $PR_NUMBER -f -b $head_branch
           # gh pr checkout $PR_NUMBER -f -b pull/${{ github.event.number }}
         env:
