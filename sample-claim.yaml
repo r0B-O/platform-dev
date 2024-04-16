@@ -1,4 +1,4 @@
-# Author: kiran.xlx@gmail.com
+# Author: kiran.balachandran@allianz.com
 apiVersion: composite.demo.rob-o.dev/v1alpha1
 kind: Demo
 metadata:
