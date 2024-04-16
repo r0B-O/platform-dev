@@ -1,4 +1,4 @@
 test-list.json
 check-file.sh
-changed_files*.json
+changed_files**
 test-script.sh
